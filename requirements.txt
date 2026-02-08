@@ -1,0 +1,16 @@
+python-dotenv
+pandas
+numpy
+scikit-learn
+typing_extensions>=4.6
+nltk
+uvicorn
+pyaml
+certifi
+pymongo[srv]
+fastapi
+python-multipart
+mlflow
+dagshub
+gensim
+# -e .

@@ -1,0 +1,37 @@
+raw_data:
+  source: mongodb
+  dataset_file: data/sms_spam_dataset.csv
+  columns:
+    label:
+      type: category
+      description: Target Variable (Ham or Spam)
+    message:
+      type: text
+      description: Raw SMS Message content
+
+processed_data:
+  train_data:
+    file: train.csv
+    columns:
+      text:
+        type: text
+        description: Cleaned and preprocessed SMS message
+      label:
+        type: int
+        description: Encoded target Variable
+  
+  test_data:
+    file: test.csv
+    columns:
+      text:
+        type: text
+        description: Cleaned and preprocessed SMS message
+      label:
+        type: int
+        description: Encoded target Variable
+
+target_column:
+  name: label
+  classes:
+    - Ham
+    - Spam
