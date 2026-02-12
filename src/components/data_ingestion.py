@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 MONGO_DB_URL = os.getenv("MONGO_DB_URL")
 import re # Regular Expression
+import nltk
 from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
 from typing import Tuple
 from src.exception.exception import CustomException
 from src.logging.logger import logging
@@ -19,6 +21,7 @@ class DataIngestion:
     def __init__(self,data_ingestion_config:DataIngestionConfig):
         try:
             self.config = data_ingestion_config
+            self.stopwords = stopwords.words('english')
             self.lemmatizer = WordNetLemmatizer()
         except Exception as e:
             raise CustomException(e,sys)
@@ -58,7 +61,7 @@ class DataIngestion:
             
             text = re.sub("[^a-zA-Z]"," ", text)
             text = text.lower().split()
-            text = [self.lemmatizer.lemmatize(word) for word in text]
+            text = [self.lemmatizer.lemmatize(word) for word in text if word not in self.stopwords]
                 
             # logging.info("Data preprocessing done")
             return text # List[str]
@@ -67,9 +70,8 @@ class DataIngestion:
         
     def prepare_target(self,dataframe:pd.DataFrame) -> np.ndarray:
         try:
-            y = pd.get_dummies(dataframe['label'])
-            y = y.iloc[:,0].values
-            y = y.astype(int)
+            # Explicitly map 'spam' to 1 and 'ham' to 0
+            y = dataframe['label'].map({'ham': 0, 'spam': 1}).astype(int).values
             logging.info("Target variable encoded")
             return y
 
@@ -118,4 +120,3 @@ class DataIngestion:
         
         except Exception as e:
             raise CustomException(e,sys)
-

@@ -29,16 +29,14 @@ class SpamHamDataExtract:
         
     def load_into_mongodb(self,records,database,collection):
         try:
-            self.database = database
-            self.collection = collection
-            self.records = records
+            mongo_client = pymongo.MongoClient(MONGO_DB_URL)
+            db = mongo_client[database]
+            coll = db[collection]
 
-            self.mongo_client = pymongo.MongoClient(MONGO_DB_URL)
-            self.database = self.mongo_client[self.database]
-            self.collection = self.database[self.collection]
-            self.records = self.collection[self.records]
+            coll.delete_many({}) # Deletes existing data to avoid duplicates
+            result = coll.insert_many(records)
 
-            return(len(self.records))
+            return len(result.inserted_ids)
         except Exception as e:
             raise CustomException(e,sys)
         

@@ -33,5 +33,5 @@ processed_data:
 target_column:
   name: label
   classes:
-    - Ham
-    - Spam
+    - 0
+    - 1

@@ -2,9 +2,15 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # C extensions
 *.so
+
+# Ignore large model files
+*.pkl
+final_model/
+
 
 # Distribution / packaging
 .Python
